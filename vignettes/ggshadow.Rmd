@@ -1,11 +1,11 @@
 ---
-title: "Shadow path, line and step"
+title: "Shadowtext Introduction"
 author: "Marc Menem"
-date: "`r Sys.Date()`"
+
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteIndexEntry{shadowtext introduction}
+  %\VignetteIndexEntry{Shadowtext Introduction}
   %\VignetteDepends{ggplot2}
   %\usepackage[utf8]{inputenc}
 ---

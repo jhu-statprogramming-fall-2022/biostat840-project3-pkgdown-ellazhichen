@@ -1,0 +1,25 @@
+url: ~
+title: ggshadow Package
+template:
+  bootstrap: 5
+  bootswatch: minty
+  theme: breeze-light
+  bslib:
+    pkgdown-nav-height: 100px
+navbar:
+  bg: dark
+  structure:
+    left:  [search, github]
+    right: [intro, reference, articles, tutorials, news]
+  components:
+    articles:
+     text: Application
+     menu:
+     - text: Example Analysis
+       href: articles/ExampleAnalysis.html
+
+footer:
+  structure:
+    left: built_with
+    right: developed_by
+

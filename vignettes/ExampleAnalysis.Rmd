@@ -1,0 +1,162 @@
+---
+title: "Example Analysis"
+output: rmarkdown::html_vignette
+author: Zhichen Xiong (Ella)
+date: "`r Sys.Date()`"
+vignette: >
+  %\VignetteIndexEntry{Example Analysis}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+library(rmarkdown)
+library(ggshadow)
+library(knitr)
+library(scales)
+library(gridExtra)
+library(ggplot2)
+library(here)
+library(dplyr)
+library(tidyr)
+library(stringr)
+library(purrr)
+```
+
+## Purpose of Analysis
+
+I used to study in University of Minnesota, a public university in MN for undergraduate. And right now, I study in Johns Hopkins a private university in MD for graduate. The tuition I paid is very different, so I want to explore the differences of tuition in these two states.
+
+## Data Source
+
+The data I choose from ***tidytuesday*** is about the [tuition](https://github.com/rfordatascience/tidytuesday/tree/master/data/2020/2020-03-10) in United States.You can click [here](https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-03-10/tuition_cost.csv) to download the raw data set.
+
+Also I use the data set about the [historical changes of the tuition](https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-03-10/historical_tuition.csv) in the U.S.
+
+## Download data into your PC
+
+```{r, warning=FALSE, message=FALSE}
+if(!dir.exists(here("data"))) { dir.create(here("data")) }
+
+# saves data only once (not each time you knit a R Markdown)
+if(!file.exists(here("data","chocolate.RDS"))) {
+  url_csv1 <- 'https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-03-10/tuition_cost.csv'
+  tuition_cost <- readr::read_csv(url_csv1)
+  url_csv2 <- 'https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-03-10/historical_tuition.csv'
+  historical_tuition <- readr::read_csv(url_csv2)
+  
+  # save the file to RDS objects
+  saveRDS(tuition_cost, file= here("data","tuition_cost.RDS"))
+  saveRDS(historical_tuition, file= here("data","historical_tuition.RDS"))
+}
+
+```
+
+## Load Data
+
+```{r, warning=FALSE, message=FALSE}
+tuition_cost <- readRDS(here("data","tuition_cost.RDS"))
+historical_tuition <- readRDS(here("data","historical_tuition.RDS"))
+head(tuition_cost)
+head(historical_tuition)
+```
+
+## Data wrangling and data visualization
+
+```{r}
+tuition_two = tuition_cost %>% filter(state == "Minnesota" | state == "Maryland") %>% 
+  filter(type == "Public"| type == "Private")
+head(tuition_two)
+```
+
+```{r}
+tuition_two %>% group_by(state_code, type, degree_length) %>% 
+  summarise(average_in_state = mean(in_state_tuition), average_out_of_state = mean(out_of_state_tuition)) %>% 
+  mutate(diff = average_out_of_state - average_in_state)
+```
+
+```{r, echo=FALSE}
+#ExpData(data = tuition_two, type=1)
+```
+
+```{r, warning=FALSE, message=FALSE, echo=FALSE}
+#Explore the tuition_cost in each type of school
+#two_type = ExpNumStat(tuition_two, by = "G", gp = "state") %>% 
+  #select(Vname, Group, TN, sum, min, max, mean, median, SD)
+#two_type[order(two_type$mean),]
+```
+
+```{r, warning=FALSE, message=FALSE, echo=FALSE}
+#Explore the tuition_cost for schools in different states
+#cost_state = ExpNumStat(tuition_cost, by = "G", gp = "state") %>% 
+  #select(Vname, Group, TN, sum, min, max, mean, median, SD)
+```
+
+```{r}
+tuition_cost %>% filter(state == "Minnesota"| state == "Maryland") %>% 
+  filter(type == "Public"| type == "Private") %>% 
+  ggplot(aes(x = state, y = in_state_tuition, fill = state)) + geom_boxplot() +
+  labs(title = "Boxplot of in State Tuition of Two States",
+       subtitle = "The variance of the tuition in MD is larger.",
+       x = "States", y = "Tuition ($)") +
+  theme(title = element_text(color="steelblue",hjust=0.2,lineheight=0.2,face="bold"),
+        axis.title.x=element_text(size=10, hjust=0.5),
+        axis.title.y=element_text(size=10, hjust=0.5))
+```
+```{r}
+MD_in_state = tuition_two %>% filter(state == "Maryland") %>% select(in_state_tuition)
+MN_in_state = tuition_two %>% filter(state == "Minnesota") %>% select(in_state_tuition)
+paste0("The average in state tuition in MD is $",map(.x = c(MD_in_state, MN_in_state), .f = function(x) mean(x))[1], ".")
+paste0("The average in state tuition in MN is $",map(.x = c(MD_in_state, MN_in_state), .f = function(x) mean(x))[2], ".")
+```
+
+
+
+```{r}
+tuition_cost %>% filter(state == "Minnesota"| state == "Maryland") %>% 
+  filter(type == "Public"| type == "Private") %>% 
+  ggplot(aes(x = state, y = in_state_tuition, fill = state)) + geom_boxplot() +
+  labs(title = "Boxplot of out of State Tuition of Two States",
+       subtitle = "The variance of the tuition in MD is larger.",
+       x = "States", y = "Tuition ($)") +
+  theme(title = element_text(color="steelblue",hjust=0.2,lineheight=0.2,face="bold"),
+        axis.title.x=element_text(size=10, hjust=0.5),
+        axis.title.y=element_text(size=10, hjust=0.5))
+```
+
+```{r}
+MD_out_state = tuition_two %>% filter(state == "Maryland") %>% select(out_of_state_tuition)
+MN_out_state = tuition_two %>% filter(state == "Minnesota") %>% select(out_of_state_tuition)
+paste0("The average out of state tuition in MD is $", map(.x = c(MD_out_state, MN_out_state), .f = function(x) mean(x))[1])
+paste0("The average out of state tuition in MN is $", map(.x = c(MD_out_state, MN_out_state), .f = function(x) mean(x))[2])
+```
+
+```{r}
+char_num = function(string){
+  sub = substr(string, 0,4)
+  num = as.numeric(sub)
+  return(num)
+}
+```
+
+```{r}
+historical_tuition["year"]  = map_dbl(historical_tuition$year, char_num)
+```
+
+```{r}
+historical_tuition %>% 
+  filter(type == "All Institutions") %>% 
+  ggplot(aes(x = year, y = tuition_cost, color = tuition_type)) + 
+  geom_glowpoint() + geom_shadowline() + facet_wrap(vars(tuition_type)) +
+  labs(title = "Changes of the Tuition From 1985 to 2016", 
+       subtitle = "Tuition is increasing. ",
+       y = "Tuition($)")
+```
+
+From the two side by side box plot and all the summarized data, we can see that the average tuition of two states are different (MD's is a little bigger than MN's). Also, we can see that the 75% quantile of MD is higher than that of MN. And when we go back to the mean amount of tuition in the table posted earlier, we can see that no matter what kind of tuition, in state or out of state, MD is higher than MN.
+
+These are the functions I used:
+
+| ggplot2                                                       | purrr     | dplyr/tidyr                                          | stringr  | ggshadow                            |
+|---------------|---------------|---------------|---------------|---------------|
+| ggplot(), geom_boxplot(), geom_glowpoint(), geom_shadowline() | map_dbl(), map() | filter(), select(),group_by(), summarise(), mutate() | substr() | geom_shadowline(), geom_glowpoint() |

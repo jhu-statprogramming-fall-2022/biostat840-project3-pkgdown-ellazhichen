@@ -1,0 +1,8 @@
+pandoc: '2.18'
+pkgdown: 2.0.6
+pkgdown_sha: ~
+articles:
+  ExampleAnalysis: ExampleAnalysis.html
+  ggshadow: ggshadow.html
+last_built: 2022-12-12T00:19Z
+
