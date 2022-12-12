@@ -1,6 +1,24 @@
 # `ggshadow`: Shadow Geoms for ggplot2
 
+------------------------------------------------------------------------
 
+# Website Link
+
+Click [here](https://github.com/marcmenem/ggshadow) to go to where the original R package came from.
+
+Click [here](https://jhu-statprogramming-fall-2022.github.io/biostat840-project3-pkgdown-ellazhichen/index.html) to go to my deployed website.
+
+#5 Customized Things
+
+1.  I changed the whole background style of the pkgdown website.
+
+2.  I changed the locations of each bottoms in Navbar.
+
+3.  I customized the navigation bar that appears at the top of the page with the navbar field.
+
+4.  I have change the name of the bottom in the navbar.
+
+5.  I customized the footer field.
 
 ## :arrow_double_down: Installation
 
@@ -32,7 +50,7 @@ ggplot(economics_long, aes(date, value01, colour = variable)) + geom_shadowline(
 
 ```
 
-![example with](example.png)
+![example with](man/figures/example.png)
 
 
 ### Without ggshadow
@@ -44,7 +62,7 @@ ggplot(economics_long, aes(date, value01, colour = variable)) + geom_line()
 
 ```
 
-![example without](lineex.png)
+![example without](man/figures/lineex.png)
 
 
 ### `ggshadow` supports varying the line color
@@ -64,7 +82,7 @@ ggplot(economics_long,
 
 ```
 
-![color varying](colorvarex.png)
+![color varying](man/figures/colorvarex.png)
 
 
 ### `ggshadow` also provides a Neon glow style
@@ -79,7 +97,7 @@ ggplot(economics_long, aes(date, value01, color = variable)) +
 
 ```
 
-![glowline](example-glow.png)
+![glowline](man/figures/example-glow.png)
 
 
 ### Neon glow points
@@ -94,7 +112,7 @@ ggplot(mtcars, aes(wt, mpg)) +
 
 ```
 
-![glowpoint](example-glowpoint.png)
+![glowpoint](man/figures/example-glowpoint.png)
 
 ### Adding a fill below the neon glow line
 
@@ -108,4 +126,4 @@ ggplot(filter( economics_long, variable %in% c('pop', 'unemploy') ),
            panel.background = element_rect(fill = "#190132")) 
 ```
 
-![glowlinefll](example-glowlinefill.png)
+![glowlinefll](man/figures/example-glowlinefill.png)
