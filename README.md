@@ -6,7 +6,7 @@
 
 Click [here](https://github.com/marcmenem/ggshadow) to go to where the original R package came from.
 
-Click [here](https://jhu-statprogramming-fall-2022.github.io/biostat840-project3-pkgdown-ellazhichen/index.html) to go to my deployed website.
+Click [here](https://jhu-statprogramming-fall-2022.github.io/biostat840-project3-pkgdown-ellazhichen/) to go to my deployed website.
 
 #5 Customized Things
 
